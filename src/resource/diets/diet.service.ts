@@ -7,6 +7,7 @@ interface Diet {
   description: string;
   onTheDiet: string;
   date?: Date;
+  sessionId?: string;
 }
 
 @Injectable()
@@ -34,6 +35,7 @@ export class DietService {
       description: data.description,
       onTheDiet: data.onTheDiet,
       date: data.date,
+      sessionId: data.sessionId,
     })
 
     return meal
@@ -53,6 +55,12 @@ export class DietService {
     }
 
     return meal
+  }
+
+  async findSummary(sessionId: string) {
+    const meals = await this.dietsRepository.findSummary(sessionId)
+
+    return meals
   }
 
   async update(id: string, data: Diet) {

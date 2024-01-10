@@ -26,6 +26,12 @@ export class DietController {
     return this.dietService.findUnique(id);
   }
 
+  @Get('/summary/:id')
+  @HttpCode(200)
+  findSummary(@Param('sessionId') sessionId: string) {
+    return this.dietService.findSummary(sessionId);
+  }
+
   @Put(':id')
   update(@Param('id') id: string, @Body() updateDietDto: DietEntity) {
     return this.dietService.update(id, updateDietDto);
