@@ -1,8 +1,11 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { DietService } from './diet.service';
+import { QueryDietDto } from './dto/query-diet-dto';
 import { DietEntity } from './entities/diet.entity';
 
 @Controller('diet')
+@UseGuards(JwtAuthGuard)
 export class DietController {
   constructor(
     private readonly dietService: DietService
@@ -16,8 +19,8 @@ export class DietController {
 
   @Get()
   @HttpCode(200)
-  findAll() {
-    return this.dietService.findAll();
+  findAll(@Query() query: QueryDietDto) {
+    return this.dietService.findAll(query);
   }
 
   @Get(':id')
@@ -26,7 +29,7 @@ export class DietController {
     return this.dietService.findUnique(id);
   }
 
-  @Get('/summary/:id')
+  @Get('/summary/:sessionId')
   @HttpCode(200)
   findSummary(@Param('sessionId') sessionId: string) {
     return this.dietService.findSummary(sessionId);

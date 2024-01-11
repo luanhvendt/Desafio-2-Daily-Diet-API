@@ -1,6 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { DietsRepository } from './repositories/diet.repository';
+import { DietEntity } from './entities/diet.entity';
+import { QueryDietDto } from './dto/query-diet-dto';
 
 interface Diet {
   name: string;
@@ -41,8 +43,8 @@ export class DietService {
     return meal
   }
 
-  async findAll() {
-    const meals = await this.dietsRepository.findAll()
+  async findAll(query: QueryDietDto) {
+    const meals = await this.dietsRepository.findAll(query)
 
     return meals
   }

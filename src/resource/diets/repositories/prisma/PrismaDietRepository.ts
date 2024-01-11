@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/database/PrismaService";
+import { QueryDietDto } from "../../dto/query-diet-dto";
 import { UpdateMealDto } from "../../dto/updateMeal";
 import { DietEntity } from "../../entities/diet.entity";
 import { DietsRepository } from "../diet.repository";
@@ -22,10 +23,75 @@ export class PrismaDietsRepository implements DietsRepository {
         return meal
     }
 
-    async findAll() {
-        const meals = await this.prisma.diet.findMany()
+    async findAll(query: QueryDietDto) {
+        let { page = 1, limit = 10, search = '' } = query;
 
-        return meals
+        page = Number(page)
+        limit = Number(limit)
+        search = String(search);
+
+        const skip = (page - 1) * limit;
+
+        const total = await this.prisma.diet.count({
+            where: {
+                OR: [
+                    {
+                        name: {
+                            contains: search,
+                        },
+                    },
+                    {
+                        description: {
+                            contains: search,
+                        },
+                    },
+                    {
+                        description: {
+                            contains: search,
+                        },
+                        onTheDiet: {
+                            contains: search,
+                        }
+                    },
+                ]
+            }
+        })
+
+        const meals = await this.prisma.diet.findMany({
+            where: {
+                OR: [
+                    {
+                        name: {
+                            contains: search,
+                        },
+                    },
+                    {
+                        description: {
+                            contains: search,
+                        },
+                    },
+                    {
+                        description: {
+                            contains: search,
+                        },
+                        onTheDiet: {
+                            contains: search,
+                        }
+                    },
+                ],
+            },
+            skip,
+            take: limit,
+        })
+
+        return {
+            total,
+            page,
+            search,
+            limit,
+            pages: Math.ceil(total / limit),
+            data: meals
+        }
     }
 
     async findUnique(id: string) {
@@ -46,7 +112,7 @@ export class PrismaDietsRepository implements DietsRepository {
         })
 
         if (meals.length === 0) {
-            throw new BadRequestException('Session not found.')
+            throw new BadRequestException('SessionId not found.')
         }
 
         const totalMeals = meals.length
@@ -79,6 +145,44 @@ export class PrismaDietsRepository implements DietsRepository {
             DietSequence: currentDietSequenceCount,
         }
     }
+
+    // async findSummary(sessionId: string) {
+    //     const meals = await this.prisma.diet.findMany({
+    //         where: {
+    //             sessionId,
+    //         }
+    //     })
+
+    //     const totalMeals = meals.length
+    //     const dietMeals = meals.filter((meal) => meal.onTheDiet === "Y")
+    //     const nonDietMeals = meals.filter((meal) => meal.onTheDiet === "N")
+
+    //     let bestDietSequence = ''
+    //     let currentDietSequence = ''
+    //     let currentDietSequenceCount = 0
+
+    //     for (const meal of meals) {
+    //         if (meal.onTheDiet === 'Y') {
+    //             currentDietSequenceCount++
+    //         } else {
+    //             if (
+    //                 currentDietSequenceCount > bestDietSequence.split(' -> ').length
+    //             ) {
+    //                 bestDietSequence = currentDietSequence
+    //             }
+    //             currentDietSequence = ''
+    //             currentDietSequenceCount = 0
+    //         }
+    //     }
+
+    //     return {
+    //         totalMeals,
+    //         onTheDietMeals: dietMeals.length,
+    //         nonTheDietMeals: nonDietMeals.length,
+    //         DietSequence: currentDietSequenceCount,
+    //     }
+    // }
+
 
     async update(id: string, dataDiet: UpdateMealDto) {
         const meal = await this.prisma.diet.update({
