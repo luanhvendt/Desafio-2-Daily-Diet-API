@@ -18,3 +18,10 @@ model Diet {
   onTheDiet   String
   date        DateTime @default(now())
 }
+
+model User {
+  userId   String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+}
