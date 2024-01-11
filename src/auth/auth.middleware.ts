@@ -8,12 +8,12 @@ export class AuthMiddleware implements NestMiddleware {
     async use(@Request() req, res: Response, next: NextFunction) {
         const token = req.headers['authorization']?.split(' ')[1];
         if (token) {
-            const userId = await this.authService.verifyToken(token);
+            const id = await this.authService.verifyToken(token);
 
-            if (!userId) {
-                throw new BadRequestException('Token is invalid');
+            if (!id) {
+                throw new BadRequestException('Invalid Token');
             }
-            const user = await this.authService.validateUser({ userId: userId.toString() });
+            const user = await this.authService.validateUser({ id: id.toString() });
             req.user = user;
         }
         next();

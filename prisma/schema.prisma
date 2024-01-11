@@ -20,7 +20,7 @@ model Diet {
 }
 
 model User {
-  userId       String         @id @default(uuid())
+  id           String         @id @default(uuid())
   name         String
   email        String         @unique
   password     String
@@ -32,5 +32,5 @@ model RefreshToken {
   refreshToken String  @unique
   userId       String
   used         Boolean @default(false)
-  User         User    @relation(fields: [userId], references: [userId])
+  User         User    @relation(fields: [userId], references: [id])
 }

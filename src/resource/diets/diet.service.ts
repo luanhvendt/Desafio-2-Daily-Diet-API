@@ -1,8 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { DietsRepository } from './repositories/diet.repository';
-import { DietEntity } from './entities/diet.entity';
 import { QueryDietDto } from './dto/query-diet-dto';
+import { DietsRepository } from './repositories/diet.repository';
 
 interface Diet {
   name: string;
@@ -73,10 +72,6 @@ export class DietService {
     }
 
     const updatedMeal = await this.dietsRepository.update(id, data)
-
-    if (!data) {
-      throw new Error('Data Meal is required.')
-    }
   }
 
   async delete(id: string) {

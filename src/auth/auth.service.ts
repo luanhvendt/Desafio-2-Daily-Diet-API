@@ -34,7 +34,7 @@ export class AuthService {
             throw new BadRequestException('Invalid Credentials.')
         }
 
-        const payload = { id: user.userId }
+        const payload = { id: user.id }
         const token = this.jwtService.sign(payload)
         const decodedToken = this.jwtService.verify(token) as { exp: number }
 
@@ -44,7 +44,7 @@ export class AuthService {
         await this.prisma.refreshToken.create({
             data: {
                 refreshToken: refreshToken,
-                userId: user.userId,
+                userId: user.id,
             }
         })
 
@@ -59,6 +59,8 @@ export class AuthService {
     }
 
     async refresh(dataRefresh: RefreshDto) {
+
+        console.log(dataRefresh)
         const token = await this.prisma.refreshToken.findFirst({
             where: {
                 refreshToken: dataRefresh.refreshToken,
@@ -66,6 +68,7 @@ export class AuthService {
             }
         })
 
+        console.log(token)
         if (!token) {
             throw new BadRequestException('Invalid Token.')
         }
@@ -109,29 +112,29 @@ export class AuthService {
         return data
     }
 
-    async verifyRefreshToken(token: string): Promise<boolean> {
+    async verifyRefreshToken(token: string) {
         try {
-            this.jwtService.verify(token);
+            this.jwtService.verify(token, { secret: process.env.JWT_SECRET });
             return true;
         } catch (error) {
-            throw new UnauthorizedException('Token inválido');
+            throw new UnauthorizedException('Invalid Token');
         }
     }
 
-    async verifyToken(token: string): Promise<number> {
+    async verifyToken(token: string) {
         try {
-            const decodedToken = this.jwtService.verify(token) as {
+            const decodedToken = this.jwtService.verify(token, { secret: process.env.JWT_SECRET }) as {
                 id: number;
             };
             return decodedToken.id;
         } catch (error) {
-            throw new UnauthorizedException('Token inválido');
+            throw new UnauthorizedException('Invalid Token');
         }
     }
 
-    async validateUser(payload: { userId: string }) {
+    async validateUser(payload: { id: string }) {
         const user = await this.prisma.user.findUnique({
-            where: { userId: payload.userId },
+            where: { id: payload.id },
         });
         if (!user) {
             throw new UnauthorizedException();

@@ -49,9 +49,11 @@ export class PrismaDietsRepository implements DietsRepository {
                         description: {
                             contains: search,
                         },
+                    },
+                    {
                         onTheDiet: {
                             contains: search,
-                        }
+                        },
                     },
                 ]
             }
@@ -145,44 +147,6 @@ export class PrismaDietsRepository implements DietsRepository {
             DietSequence: currentDietSequenceCount,
         }
     }
-
-    // async findSummary(sessionId: string) {
-    //     const meals = await this.prisma.diet.findMany({
-    //         where: {
-    //             sessionId,
-    //         }
-    //     })
-
-    //     const totalMeals = meals.length
-    //     const dietMeals = meals.filter((meal) => meal.onTheDiet === "Y")
-    //     const nonDietMeals = meals.filter((meal) => meal.onTheDiet === "N")
-
-    //     let bestDietSequence = ''
-    //     let currentDietSequence = ''
-    //     let currentDietSequenceCount = 0
-
-    //     for (const meal of meals) {
-    //         if (meal.onTheDiet === 'Y') {
-    //             currentDietSequenceCount++
-    //         } else {
-    //             if (
-    //                 currentDietSequenceCount > bestDietSequence.split(' -> ').length
-    //             ) {
-    //                 bestDietSequence = currentDietSequence
-    //             }
-    //             currentDietSequence = ''
-    //             currentDietSequenceCount = 0
-    //         }
-    //     }
-
-    //     return {
-    //         totalMeals,
-    //         onTheDietMeals: dietMeals.length,
-    //         nonTheDietMeals: nonDietMeals.length,
-    //         DietSequence: currentDietSequenceCount,
-    //     }
-    // }
-
 
     async update(id: string, dataDiet: UpdateMealDto) {
         const meal = await this.prisma.diet.update({
