@@ -20,8 +20,17 @@ model Diet {
 }
 
 model User {
-  userId   String @id @default(uuid())
-  name     String
-  email    String @unique
-  password String
+  userId       String         @id @default(uuid())
+  name         String
+  email        String         @unique
+  password     String
+  RefreshToken RefreshToken[]
+}
+
+model RefreshToken {
+  id           Int     @id @unique @default(autoincrement())
+  refreshToken String  @unique
+  userId       String
+  used         Boolean @default(false)
+  User         User    @relation(fields: [userId], references: [userId])
 }
