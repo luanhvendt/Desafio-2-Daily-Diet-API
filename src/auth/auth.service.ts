@@ -59,8 +59,6 @@ export class AuthService {
     }
 
     async refresh(dataRefresh: RefreshDto) {
-
-        console.log(dataRefresh)
         const token = await this.prisma.refreshToken.findFirst({
             where: {
                 refreshToken: dataRefresh.refreshToken,
@@ -68,7 +66,6 @@ export class AuthService {
             }
         })
 
-        console.log(token)
         if (!token) {
             throw new BadRequestException('Invalid Token.')
         }
