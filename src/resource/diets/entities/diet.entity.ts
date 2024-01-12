@@ -1,4 +1,4 @@
-export type DietEntity = {
+export interface DietEntity  {
     id?: string;
     name: string;
     description: string;
