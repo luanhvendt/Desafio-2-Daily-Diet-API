@@ -1,13 +1,14 @@
+import { randomUUID } from "crypto";
 import { UpdateMealDto } from "src/resource/diets/dto/updateMeal";
 import { DietEntity } from "src/resource/diets/entities/diet.entity";
 import { DietsRepository } from "src/resource/diets/repositories/diet.repository";
 
-export class InMemoryDietsRpeository implements DietsRepository {
+export class InMemoryDietsRepository implements DietsRepository {
     public items: any = []
 
     async create(data: DietEntity) {
         const user: DietEntity = {
-            id: '1',
+            id: data.id || randomUUID(),
             name: data.name,
             description: data.description,
             onTheDiet: data.onTheDiet,

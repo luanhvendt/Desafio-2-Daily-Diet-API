@@ -29,7 +29,7 @@ model User {
 
 model RefreshToken {
   id           Int     @id @unique @default(autoincrement())
-  refreshToken String  @unique
+  refreshToken String  
   userId       String
   used         Boolean @default(false)
   User         User    @relation(fields: [userId], references: [id])

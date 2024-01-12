@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { PrismaService } from "src/database/PrismaService";
+import { randomUUID } from "crypto";
+import { PrismaService } from "../../../../database/PrismaService";
 import { QueryDietDto } from "../../dto/query-diet-dto";
 import { UpdateMealDto } from "../../dto/updateMeal";
 import { DietEntity } from "../../entities/diet.entity";
@@ -12,6 +13,7 @@ export class PrismaDietsRepository implements DietsRepository {
     async create(data: DietEntity) {
         const meal = await this.prisma.diet.create({
             data: {
+                id: data.id || randomUUID(),
                 name: data.name,
                 description: data.description,
                 onTheDiet: data.onTheDiet,

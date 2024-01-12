@@ -2,7 +2,7 @@ import { InMemoryUsersRepository } from "../../../test/repositories/InMemoryUser
 import { UsersService } from "./users.service";
 
 describe('UsersService', () => {
-  it('shoulg be able to create a new user', async () => {
+  it('should be able to create a new user', async () => {
     const inMemoryUsersRepository = new InMemoryUsersRepository()
     const usersService = new UsersService(inMemoryUsersRepository)
 

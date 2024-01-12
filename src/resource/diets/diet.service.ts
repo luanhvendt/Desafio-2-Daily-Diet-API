@@ -4,6 +4,7 @@ import { QueryDietDto } from './dto/query-diet-dto';
 import { DietsRepository } from './repositories/diet.repository';
 
 interface Diet {
+  id?: string;
   name: string;
   description: string;
   onTheDiet: string;
@@ -39,6 +40,8 @@ export class DietService {
       sessionId: data.sessionId,
     })
 
+    console.log('Criado: ', meal)
+
     return meal
   }
 
@@ -51,9 +54,11 @@ export class DietService {
   async findUnique(id: string) {
     const meal = await this.dietsRepository.findUnique(id)
 
+    console.log('Achada: ', meal)
     if (!meal) {
       throw new BadRequestException('Meal not found.')
     }
+
 
     return meal
   }
