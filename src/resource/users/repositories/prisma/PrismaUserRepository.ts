@@ -89,7 +89,7 @@ export class PrismaUsersRepository implements UsersRepository {
     async findUnique(id: string) {
         const user = await this.prisma.user.findUnique({
             where: {
-                id: id
+                id,
             }
         })
 
@@ -99,7 +99,7 @@ export class PrismaUsersRepository implements UsersRepository {
     async update(id: string, dataUser: UpdateUserDto) {
         const user = await this.prisma.user.update({
             where: {
-                id: id,
+                id,
             },
             data: {
                 name: dataUser.name,

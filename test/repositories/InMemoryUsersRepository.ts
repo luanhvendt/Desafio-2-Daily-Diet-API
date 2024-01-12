@@ -1,3 +1,4 @@
+import { BadRequestException } from "@nestjs/common";
 import { UpdateUserDto } from "src/resource/users/dto/update-user.dto";
 import { UserEntity } from "src/resource/users/entities/user.entity";
 import { UsersRepository } from "src/resource/users/repositories/user.repository";
@@ -6,8 +7,14 @@ export class InMemoryUsersRepository implements UsersRepository {
     public items: any = []
 
     async create(data: UserEntity) {
+        for (let i = 0; i < this.items.length; i++) {
+            if (this.items[i].email === data.email) {
+                throw new BadRequestException('email already exists.')
+            }
+        }
+
         const user: UserEntity = {
-            id: '1',
+            id: data.id,
             name: data.name,
             email: data.email,
             password: data.password

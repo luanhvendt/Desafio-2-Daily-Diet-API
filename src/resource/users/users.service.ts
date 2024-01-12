@@ -25,7 +25,7 @@ export class UsersService {
     }
 
     const user = await this.usersRepository.create({
-      id: randomUUID(),
+      id: data.id || randomUUID(),
       name: data.name,
       email: data.email,
       password: data.password,
