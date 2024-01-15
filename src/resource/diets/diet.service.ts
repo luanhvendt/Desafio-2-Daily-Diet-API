@@ -40,8 +40,6 @@ export class DietService {
       sessionId: data.sessionId,
     })
 
-    console.log('Criado: ', meal)
-
     return meal
   }
 
@@ -54,7 +52,6 @@ export class DietService {
   async findUnique(id: string) {
     const meal = await this.dietsRepository.findUnique(id)
 
-    console.log('Achada: ', meal)
     if (!meal) {
       throw new BadRequestException('Meal not found.')
     }
