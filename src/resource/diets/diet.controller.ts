@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { JwtAuthGuard } from '../../auth/guard/jwt-auth.guard';
 import { DietService } from './diet.service';
 import { QueryDietDto } from './dto/query-diet-dto';
 import { DietEntity } from './entities/diet.entity';
